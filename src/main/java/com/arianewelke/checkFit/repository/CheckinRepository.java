@@ -1,7 +1,7 @@
 package com.arianewelke.checkFit.repository;
 
 import com.arianewelke.checkFit.entity.Checkin;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CheckinRepository extends CrudRepository<Checkin, Long> {
+public interface CheckinRepository extends JpaRepository<Checkin, Long> {
 }
