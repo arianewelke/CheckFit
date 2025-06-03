@@ -20,8 +20,7 @@ public class Activity {
     public Activity() {
     }
 
-    public Activity(Long id, LocalDateTime startTime, LocalDateTime finishTime, String description, int limitPeople) {
-        this.id = id;
+    public Activity(LocalDateTime startTime, LocalDateTime finishTime, String description, int limitPeople) {
         this.startTime = startTime;
         this.finishTime = finishTime;
         this.description = description;
@@ -79,5 +78,19 @@ public class Activity {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public void Validate() {
+        if(description == null || description.isEmpty())
+            throw new IllegalArgumentException("description is empty");
+
+
+        if(this.finishTime.isBefore(this.startTime)) {
+            throw new IllegalArgumentException("finishTime must be before startTime.");
+        }
+
+        if(limitPeople < 1) {
+            throw new IllegalArgumentException("limitPeople must be greater than 0");
+        }
     }
 }

@@ -34,19 +34,24 @@ public class UserServiceImp implements UserService {
 
     @Override
     public User update(Long id, User user) {
-        return userRepository.findById(id).map(existing -> {
-            existing.setName(user.getName());
-            existing.setEmail(user.getEmail());
-            existing.setPhone(user.getPhone());
-            existing.setCpf(user.getCpf());
-            existing.setDateBirth(user.getDateBirth());
-            existing.setPassword(user.getPassword());
-            return userRepository.save(existing);
-        }).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        User userToUpdate = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+            userToUpdate.setName(user.getName());
+            userToUpdate.setEmail(user.getEmail());
+            userToUpdate.setPhone(user.getPhone());
+            userToUpdate.setCpf(user.getCpf());
+            userToUpdate.setDateBirth(user.getDateBirth());
+            userToUpdate.setPassword(user.getPassword());
+            return userRepository.save(userToUpdate);
     }
 
     @Override
     public void delete(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+
     }
 }

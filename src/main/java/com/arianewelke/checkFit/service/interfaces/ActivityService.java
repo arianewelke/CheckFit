@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ActivityService {
+
     Activity save(Activity activity);
     List<Activity> findAll();
     Optional<Activity> findById(Long id);

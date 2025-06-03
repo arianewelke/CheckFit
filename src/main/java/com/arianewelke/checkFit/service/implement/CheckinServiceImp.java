@@ -34,10 +34,10 @@ public class CheckinServiceImp implements CheckinService {
 
     @Override
     public Checkin update(Long id, Checkin checkin) {
-        return checkinRepository.findById(id).map(existing -> {
-            existing.setCheckinTime(checkin.getCheckinTime());
-            return checkinRepository.save(existing);
-        }).orElseThrow(() -> new RuntimeException("Checkin not found with id: " + id));
+       Checkin existingCheckin = checkinRepository.findById(id)
+                       .orElseThrow(() -> new RuntimeException("Checkin Not Found with ID: " + id));
+            existingCheckin.setCheckinTime(checkin.getCheckinTime());
+            return checkinRepository.save(existingCheckin);
     }
 
     @Override

@@ -34,13 +34,13 @@ public class ActivityServiceImp implements ActivityService {
 
     @Override
     public Activity update(Long id, Activity activity) {
-        return activityRepository.findById(id).map(existing -> {
-            existing.setStartTime(activity.getStartTime());
-            existing.setFinishTime(activity.getFinishTime());
-            existing.setDescription(activity.getDescription());
-            existing.setLimitPeople(activity.getLimitPeople());
-            return activityRepository.save(existing);
-        }).orElseThrow(() -> new RuntimeException("Activity not found with id: " + id));
+        Activity oldActivity = activityRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Activity not found with id: " + id));
+        oldActivity.setDescription(activity.getDescription());
+        oldActivity.setStartTime(activity.getStartTime());
+        oldActivity.setFinishTime(activity.getFinishTime());
+        oldActivity.setLimitPeople(activity.getLimitPeople());
+        return activityRepository.save(oldActivity);
     }
 
     @Override
