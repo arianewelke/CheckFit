@@ -11,6 +11,7 @@ public interface UserService {
     Optional<User> findById(Long id);
     User update(Long id, User user);
     void delete(Long id);
+    List<User> findByEmail(String user);
 
     void deleteById(Long id);
 }

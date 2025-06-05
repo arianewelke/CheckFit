@@ -51,6 +51,11 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public List<User> findByEmail(String user) {
+        return List.of();
+    }
+
+    @Override
     public void deleteById(Long id) {
 
     }
