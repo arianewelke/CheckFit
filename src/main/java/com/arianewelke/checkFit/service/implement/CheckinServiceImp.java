@@ -1,10 +1,16 @@
 package com.arianewelke.checkFit.service.implement;
 
+import com.arianewelke.checkFit.dto.CheckinRequestDTO;
+import com.arianewelke.checkFit.dto.CheckinResponseDTO;
 import com.arianewelke.checkFit.entity.Checkin;
+import com.arianewelke.checkFit.repository.ActivityRepository;
 import com.arianewelke.checkFit.repository.CheckinRepository;
+import com.arianewelke.checkFit.repository.UserRepository;
 import com.arianewelke.checkFit.service.interfaces.CheckinService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,14 +18,55 @@ import java.util.Optional;
 public class CheckinServiceImp implements CheckinService {
 
     private final CheckinRepository checkinRepository;
+    private final UserRepository userRepository;
+    private final ActivityRepository activityRepository;
 
-    public CheckinServiceImp(CheckinRepository checkinRepository) {
+    public CheckinServiceImp(CheckinRepository checkinRepository, UserRepository userRepository, ActivityRepository activityRepository) {
         this.checkinRepository = checkinRepository;
+        this.userRepository = userRepository;
+        this.activityRepository = activityRepository;
     }
 
     @Override
-    public Checkin save(Checkin checkin) {
-        return checkinRepository.save(checkin);
+    public CheckinResponseDTO save(CheckinRequestDTO dto) {
+        var activityOptional = activityRepository.findById(dto.idActivity());
+        var userOptional = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        if (activityOptional.isEmpty() || userOptional.isEmpty()) {
+            throw new RuntimeException("User or activity not found");
+        }
+
+        var activity = activityOptional.get();
+        var user = userOptional.get();
+        var now = LocalDateTime.now();
+
+        if (activity.getFinishTime().isBefore(now)) {
+            throw new RuntimeException("Unable to check in to an activity that has already finished");
+        }
+
+        long checkinCount = checkinRepository.countByActivityId(activity.getId());
+        if (checkinCount >= activity.getLimitPeople()) {
+            throw new RuntimeException("maximum number of people reached");
+        }
+
+        if (checkinRepository.existsByUserAndActivity(user, activity)) {
+            throw new RuntimeException("User has already checked in this activity");
+        }
+
+        LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1).minusSeconds(1);
+
+        boolean alreadyCheckedToday = checkinRepository.existsByUserAndCheckinTimeBetween(user, startOfDay, endOfDay);
+        if (alreadyCheckedToday) {
+            throw new RuntimeException("User has already checked today");
+        }
+
+        var checkin = new Checkin(user, activity);
+
+        checkinRepository.save(checkin);
+
+        var response = new CheckinResponseDTO(user.getName(), activity.getDescription(), checkin.getCheckinTime());
+        return response;
     }
 
     @Override

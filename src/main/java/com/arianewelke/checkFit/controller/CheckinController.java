@@ -1,5 +1,7 @@
 package com.arianewelke.checkFit.controller;
 
+import com.arianewelke.checkFit.dto.CheckinRequestDTO;
+import com.arianewelke.checkFit.dto.CheckinResponseDTO;
 import com.arianewelke.checkFit.entity.Checkin;
 import com.arianewelke.checkFit.service.interfaces.CheckinService;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +20,8 @@ public class CheckinController {
     }
 
     @PostMapping
-    public ResponseEntity<Checkin>save(@RequestBody Checkin checkin) {
-        return ResponseEntity.ok(checkinService.save(checkin));
+    public ResponseEntity<CheckinResponseDTO>save(@RequestBody CheckinRequestDTO dto) {
+        return ResponseEntity.ok().body(checkinService.save(dto));
     }
 
     @GetMapping

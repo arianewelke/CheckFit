@@ -1,41 +1,42 @@
 package com.arianewelke.checkFit.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "checkin")
+@Getter
+@Setter
 public class Checkin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate checkinTime;
+
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "activityId")
+    private Activity activity;
+
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
+    private LocalDateTime checkinTime;
 
     public Checkin() {
     }
 
-    public Checkin(LocalDate checkinTime) {
-        this.checkinTime = checkinTime;
-
-    }
-
-    public LocalDate getCheckinTime() {
-        return checkinTime;
-    }
-
-    public void setCheckinTime(LocalDate checkinTime) {
-        this.checkinTime = checkinTime;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
+    public Checkin(User user, Activity activity) {
+        this.user = user;
+        this.activity = activity;
+        this.checkinTime = LocalDateTime.now();
     }
 
     @Override

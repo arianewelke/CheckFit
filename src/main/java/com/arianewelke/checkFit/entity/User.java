@@ -1,13 +1,21 @@
 package com.arianewelke.checkFit.entity;
 
 import jakarta.persistence.*;
-
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name="user")
-public class User {
+@Getter
+@Setter
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +27,14 @@ public class User {
     private LocalDate dateBirth;
     private String password;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "user")
+    private List<Checkin> checkins;
+
     public User() {
+
     }
 
     public User(String name, String email, String phone, String cpf, LocalDate dateBirth, String password) {
@@ -29,62 +44,38 @@ public class User {
         this.cpf = cpf;
         this.dateBirth = dateBirth;
         this.password = password;
+        this.createdAt = LocalDateTime.now();
     }
 
-    public String getCpf() {
-        return cpf;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    @Override
+    public String getUsername() {
+        return this.email;
     }
 
-    public LocalDate getDateBirth() {
-        return dateBirth;
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
     }
 
-    public void setDateBirth(LocalDate dateBirth) {
-        this.dateBirth = dateBirth;
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
     }
 
-    public String getEmail() {
-        return email;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 
     @Override

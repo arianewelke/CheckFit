@@ -1,21 +1,32 @@
 package com.arianewelke.checkFit.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name="activity")
+@Getter
+@Setter
 public class Activity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+    @JsonFormat(pattern = "dd-MM-yyy HH:mm")
     private LocalDateTime startTime;
+    @JsonFormat(pattern = "dd-MM-yyy HH:mm")
     private LocalDateTime finishTime;
     private String description;
     private int limitPeople;
+
+    @OneToMany(mappedBy = "activity")
+    private List<Checkin> checkins;
 
     public Activity() {
     }
@@ -25,46 +36,6 @@ public class Activity {
         this.finishTime = finishTime;
         this.description = description;
         this.limitPeople = limitPeople;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getFinishTime() {
-        return finishTime;
-    }
-
-    public void setFinishTime(LocalDateTime finishTime) {
-        this.finishTime = finishTime;
-    }
-
-    public int getLimitPeople() {
-        return limitPeople;
-    }
-
-    public void setLimitPeople(int limitPeople) {
-        this.limitPeople = limitPeople;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     @Override
@@ -86,11 +57,11 @@ public class Activity {
 
 
         if(this.finishTime.isBefore(this.startTime)) {
-            throw new IllegalArgumentException("finishTime must be before startTime.");
+            throw new IllegalArgumentException("finish Time must be before start Time.");
         }
 
         if(limitPeople < 1) {
-            throw new IllegalArgumentException("limitPeople must be greater than 0");
+            throw new IllegalArgumentException("limit People must be greater than 0");
         }
     }
 }
