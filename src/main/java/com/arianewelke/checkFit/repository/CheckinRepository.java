@@ -6,6 +6,7 @@ import com.arianewelke.checkFit.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface CheckinRepository extends JpaRepository<Checkin, Long> {
 
@@ -14,4 +15,6 @@ public interface CheckinRepository extends JpaRepository<Checkin, Long> {
     boolean existsByUserAndActivity(User user, Activity activity);
 
     boolean existsByUserAndCheckinTimeBetween(User user, LocalDateTime start, LocalDateTime end);
+
+    List<Checkin>  findByUserOrderByCheckinTimeDesc(User user);
 }

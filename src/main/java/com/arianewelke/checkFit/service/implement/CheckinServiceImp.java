@@ -2,6 +2,7 @@ package com.arianewelke.checkFit.service.implement;
 
 import com.arianewelke.checkFit.dto.CheckinRequestDTO;
 import com.arianewelke.checkFit.dto.CheckinResponseDTO;
+import com.arianewelke.checkFit.dto.CheckinWithHistoryDTO;
 import com.arianewelke.checkFit.entity.Checkin;
 import com.arianewelke.checkFit.repository.ActivityRepository;
 import com.arianewelke.checkFit.repository.CheckinRepository;
@@ -28,7 +29,7 @@ public class CheckinServiceImp implements CheckinService {
     }
 
     @Override
-    public CheckinResponseDTO save(CheckinRequestDTO dto) {
+    public CheckinWithHistoryDTO save(CheckinRequestDTO dto) {
         var activityOptional = activityRepository.findById(dto.idActivity());
         var userOptional = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
@@ -62,11 +63,19 @@ public class CheckinServiceImp implements CheckinService {
         }
 
         var checkin = new Checkin(user, activity);
-
         checkinRepository.save(checkin);
 
-        var response = new CheckinResponseDTO(user.getName(), activity.getDescription(), checkin.getCheckinTime());
-        return response;
+        var current = new CheckinResponseDTO(user.getName(), activity.getDescription(), checkin.getCheckinTime());
+
+        var history = checkinRepository.findByUserOrderByCheckinTimeDesc(user).stream()
+                .map(c -> new CheckinResponseDTO(
+                        c.getUser().getName(),
+                        c.getActivity().getDescription(),
+                        c.getCheckinTime()
+                ))
+                .toList();
+
+        return new CheckinWithHistoryDTO(current, history);
     }
 
     @Override
@@ -91,4 +100,24 @@ public class CheckinServiceImp implements CheckinService {
     public void delete(Long id) {
         checkinRepository.deleteById(id);
     }
+
+    public List<CheckinResponseDTO> getUserCheckinsHistory() {
+        var userOptional = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        if (userOptional.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+
+        var user = userOptional.get();
+        var checkins = checkinRepository.findByUserOrderByCheckinTimeDesc(user);
+
+        return checkins.stream()
+                .map(c -> new CheckinResponseDTO(
+                        c.getUser().getName(),
+                        c.getActivity().getDescription(),
+                        c.getCheckinTime()
+                ))
+                .toList();
+    }
+
 }

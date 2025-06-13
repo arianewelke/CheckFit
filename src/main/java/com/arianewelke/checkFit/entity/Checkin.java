@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 @Table(name = "checkin")
@@ -51,6 +52,7 @@ public class Checkin {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
 }
 
 

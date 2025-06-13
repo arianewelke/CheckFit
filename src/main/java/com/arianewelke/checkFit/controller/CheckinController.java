@@ -2,6 +2,7 @@ package com.arianewelke.checkFit.controller;
 
 import com.arianewelke.checkFit.dto.CheckinRequestDTO;
 import com.arianewelke.checkFit.dto.CheckinResponseDTO;
+import com.arianewelke.checkFit.dto.CheckinWithHistoryDTO;
 import com.arianewelke.checkFit.entity.Checkin;
 import com.arianewelke.checkFit.service.interfaces.CheckinService;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,10 @@ public class CheckinController {
     }
 
     @PostMapping
-    public ResponseEntity<CheckinResponseDTO>save(@RequestBody CheckinRequestDTO dto) {
+    public ResponseEntity<CheckinWithHistoryDTO> save(@RequestBody CheckinRequestDTO dto) {
         return ResponseEntity.ok().body(checkinService.save(dto));
     }
+
 
     @GetMapping
     public ResponseEntity<List<Checkin>>findAll() {

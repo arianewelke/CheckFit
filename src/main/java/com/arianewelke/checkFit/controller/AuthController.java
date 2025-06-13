@@ -34,7 +34,6 @@ public class AuthController {
             String token = this.tokenService.generateToken(user);
             return ResponseEntity.ok(token);
         }
-
         return ResponseEntity.badRequest().build();
     }
 
