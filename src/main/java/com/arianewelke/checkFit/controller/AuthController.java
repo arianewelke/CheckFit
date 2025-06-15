@@ -4,6 +4,7 @@ import com.arianewelke.checkFit.dto.LoginRequestDTO;
 import com.arianewelke.checkFit.dto.RegisterRequestDTO;
 import com.arianewelke.checkFit.dto.ResponseDTO;
 import com.arianewelke.checkFit.entity.User;
+import com.arianewelke.checkFit.exceptions.BusinessExceptions;
 import com.arianewelke.checkFit.infra.security.TokenService;
 import com.arianewelke.checkFit.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -46,19 +48,29 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequestDTO body) {
 
-//        if (userRepository.existsByEmail(body.email())) {
-//            return ResponseEntity.badRequest().body("Email already registered");
-//        }
         if (userRepository.existsByEmail(body.email())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already registered");
+            throw new BusinessExceptions("Email already registered");
         }
 
         if (userRepository.existsByCpf(body.cpf())) {
-            return ResponseEntity.badRequest().body("CPF already registered");
+            throw new BusinessExceptions("CPF already registered");
         }
 
         if(userRepository.existsByPhone(body.phone())) {
-            return ResponseEntity.badRequest().body("Phone already registered");
+            throw new BusinessExceptions("Phone already registered");
+        }
+
+        if (!body.phone().matches("^\\d{10,11}$")) {
+            throw new BusinessExceptions("Phone number must contain 10 or 11 digits");
+        }
+        if (!body.cpf().matches("^\\d{11}$")) {
+            throw new BusinessExceptions("CPF must contain exactly 11 digits");
+        }
+        if (!body.password().matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")) {
+            throw new BusinessExceptions("Password must have at least 8 characters, including letters and numbers");
+        }
+        if (!body.email().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            throw new BusinessExceptions("Invalid email format");
         }
 
         var newUser = new User();
@@ -72,8 +84,9 @@ public class AuthController {
 
         this.userRepository.save(newUser);
 
-        //return ResponseEntity.ok(new ResponseDTO(newUser.getName()));
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        URI location = URI.create("/user/" + newUser.getId());
+        ResponseDTO response = new ResponseDTO(newUser.getName());
+        return ResponseEntity.created(location).body(response);
 
     }
 }
