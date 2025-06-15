@@ -1,10 +1,14 @@
 package com.arianewelke.checkFit.controller;
 
+import com.arianewelke.checkFit.dto.ActivityRequestDTO;
+import com.arianewelke.checkFit.dto.ActivityResponseDTO;
 import com.arianewelke.checkFit.entity.Activity;
+import com.arianewelke.checkFit.repository.ActivityRepository;
 import com.arianewelke.checkFit.service.interfaces.ActivityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -12,15 +16,35 @@ import java.util.List;
 public class ActivityController {
 
     private final ActivityService activityService;
+    private final ActivityRepository activityRepository;
+    private java.time.LocalDateTime LocalDateTime;
 
-    public ActivityController(ActivityService activityService) {
+    public ActivityController(ActivityService activityService, ActivityRepository activityRepository) {
         this.activityService = activityService;
+        this.activityRepository = activityRepository;
     }
 
     @PostMapping
-    public ResponseEntity<Activity>save(@RequestBody Activity activity) {
-        return ResponseEntity.ok(activityService.save(activity));
+    public ResponseEntity<ActivityResponseDTO> create(@RequestBody ActivityRequestDTO dto) {
+        Activity activity = new Activity();
+        activity.setDescription(dto.description());
+        activity.setStartTime(dto.startTime());
+        activity.setFinishTime(dto.finishTime());
+        activity.setLimitPeople(dto.limitPeople());
+
+        activityRepository.save(activity);
+
+        return ResponseEntity.ok(
+                new ActivityResponseDTO(
+                        activity.getId(),
+                        activity.getDescription(),
+                        activity.getStartTime(),
+                        activity.getFinishTime(),
+                        activity.getLimitPeople()
+                )
+        );
     }
+
 
     @GetMapping
     public ResponseEntity<List<Activity>>findAll() {

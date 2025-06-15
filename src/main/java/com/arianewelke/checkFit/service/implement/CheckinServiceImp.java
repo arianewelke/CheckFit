@@ -8,8 +8,10 @@ import com.arianewelke.checkFit.repository.ActivityRepository;
 import com.arianewelke.checkFit.repository.CheckinRepository;
 import com.arianewelke.checkFit.repository.UserRepository;
 import com.arianewelke.checkFit.service.interfaces.CheckinService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,7 +36,7 @@ public class CheckinServiceImp implements CheckinService {
         var userOptional = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (activityOptional.isEmpty() || userOptional.isEmpty()) {
-            throw new RuntimeException("User or activity not found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User or activity not found");
         }
 
         var activity = activityOptional.get();
@@ -42,16 +44,16 @@ public class CheckinServiceImp implements CheckinService {
         var now = LocalDateTime.now();
 
         if (activity.getFinishTime().isBefore(now)) {
-            throw new RuntimeException("Unable to check in to an activity that has already finished");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to check in to an activity that has already finished");
         }
 
         long checkinCount = checkinRepository.countByActivityId(activity.getId());
         if (checkinCount >= activity.getLimitPeople()) {
-            throw new RuntimeException("maximum number of people reached");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "maximum number of people reached");
         }
 
         if (checkinRepository.existsByUserAndActivity(user, activity)) {
-            throw new RuntimeException("User has already checked in this activity");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User has already checked in this activity");
         }
 
         LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
@@ -59,7 +61,7 @@ public class CheckinServiceImp implements CheckinService {
 
         boolean alreadyCheckedToday = checkinRepository.existsByUserAndCheckinTimeBetween(user, startOfDay, endOfDay);
         if (alreadyCheckedToday) {
-            throw new RuntimeException("User has already checked today");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User has already checked today");
         }
 
         var checkin = new Checkin(user, activity);
@@ -91,7 +93,7 @@ public class CheckinServiceImp implements CheckinService {
     @Override
     public Checkin update(Long id, Checkin checkin) {
        Checkin existingCheckin = checkinRepository.findById(id)
-                       .orElseThrow(() -> new RuntimeException("Checkin Not Found with ID: " + id));
+                       .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Checkin Not Found with ID: " + id));
             existingCheckin.setCheckinTime(checkin.getCheckinTime());
             return checkinRepository.save(existingCheckin);
     }
@@ -105,7 +107,7 @@ public class CheckinServiceImp implements CheckinService {
         var userOptional = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (userOptional.isEmpty()) {
-            throw new RuntimeException("User not found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found");
         }
 
         var user = userOptional.get();

@@ -1,14 +1,11 @@
 package com.arianewelke.checkFit.service.implement;
 
-import com.arianewelke.checkFit.dto.CheckinResponseDTO;
 import com.arianewelke.checkFit.entity.Activity;
-import com.arianewelke.checkFit.entity.Checkin;
-import com.arianewelke.checkFit.entity.User;
 import com.arianewelke.checkFit.repository.ActivityRepository;
 import com.arianewelke.checkFit.repository.CheckinRepository;
 import com.arianewelke.checkFit.repository.UserRepository;
 import com.arianewelke.checkFit.service.interfaces.ActivityService;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,13 +15,9 @@ import java.util.Optional;
 public class ActivityServiceImp implements ActivityService {
 
     private final ActivityRepository activityRepository;
-    private final UserRepository userRepository;
-    private final CheckinRepository checkinRepository;
 
     public ActivityServiceImp(ActivityRepository activityRepository, UserRepository userRepository, CheckinRepository checkinRepository) {
         this.activityRepository = activityRepository;
-        this.userRepository = userRepository;
-        this.checkinRepository = checkinRepository;
     }
 
     @Override

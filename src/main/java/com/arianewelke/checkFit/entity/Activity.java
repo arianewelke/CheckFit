@@ -18,9 +18,9 @@ public class Activity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
-    @JsonFormat(pattern = "dd-MM-yyy HH:mm")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime startTime;
-    @JsonFormat(pattern = "dd-MM-yyy HH:mm")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime finishTime;
     private String description;
     private int limitPeople;
