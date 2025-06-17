@@ -9,8 +9,7 @@ function Activity() {
     const [activities, setActivities] = useState([]);
     const [availability, setAvailability] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [isCheckingIn, setIsCheckingIn] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");;
     const [checkingInActivity, setCheckingInActivity] = useState(null);
     const [toast, setToast] = useState({ message: "", type: "" });
     

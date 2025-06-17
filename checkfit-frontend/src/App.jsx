@@ -3,7 +3,7 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Activity from "./pages/Activity.jsx";
-import CheckinHistory from "./pages/CheckinHistory";
+import CheckinHistory from "./pages/CheckinHistory.jsx";
 import Home from "./pages/Home";
 
 function App() {
