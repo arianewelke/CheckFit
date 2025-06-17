@@ -5,45 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="574caade-ea17-4550-8a2b-8ebf26e0513e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/CheckFitApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/controller/ActivityController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/controller/AuthController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/controller/CheckinController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/controller/UserController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/dto/ActivityRequestDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/dto/ActivityResponseDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/dto/CheckinRequestDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/dto/CheckinResponseDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/dto/CheckinWithHistoryDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/dto/LoginRequestDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/dto/RegisterRequestDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/dto/ResponseDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/entity/Activity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/entity/Checkin.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/entity/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/exceptions/BusinessExceptions.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/exceptions/GlobalExceptionHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/infra/security/CustomUserDetailsService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/infra/security/SecurityConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/infra/security/SecurityFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/infra/security/TokenService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/repository/ActivityRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/repository/CheckinRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/repository/UserRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/service/implement/ActivityServiceImp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/service/implement/CheckinServiceImp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/service/implement/UserServiceImp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/service/interfaces/ActivityService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/service/interfaces/CheckinService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/arianewelke/checkFit/service/interfaces/UserService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/arianewelke/checkFit/CheckFitApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,7 +115,7 @@
       <workItem from="1749649715928" duration="2471000" />
       <workItem from="1749741580431" duration="622000" />
       <workItem from="1749752146828" duration="612000" />
-      <workItem from="1749757677700" duration="79575000" />
+      <workItem from="1749757677700" duration="81189000" />
     </task>
     <servers />
   </component>
