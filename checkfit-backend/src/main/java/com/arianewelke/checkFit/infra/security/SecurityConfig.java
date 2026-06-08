@@ -26,8 +26,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .cors()
-                .and()
+                .cors(cors -> cors.configurationSource(request -> {
+                    var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
+                    corsConfiguration.setAllowedOrigins(java.util.List.of("http://localhost:5173", "https://check-fit.vercel.app"));
+                    corsConfiguration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
+                    corsConfiguration.setAllowCredentials(true);
+                    return corsConfiguration;
+                }))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
