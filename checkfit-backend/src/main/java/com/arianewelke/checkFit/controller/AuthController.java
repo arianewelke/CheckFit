@@ -4,6 +4,7 @@ import com.arianewelke.checkFit.dto.LoginRequestDTO;
 import com.arianewelke.checkFit.dto.RegisterRequestDTO;
 import com.arianewelke.checkFit.dto.ResponseDTO;
 import com.arianewelke.checkFit.entity.User;
+import com.arianewelke.checkFit.entity.UserRole;
 import com.arianewelke.checkFit.exceptions.BusinessExceptions;
 import com.arianewelke.checkFit.infra.security.TokenService;
 import com.arianewelke.checkFit.repository.UserRepository;
@@ -81,6 +82,7 @@ public class AuthController {
         newUser.setDateBirth(body.dateBirth());
         newUser.setCreatedAt(LocalDateTime.now());
         newUser.setPassword(passwordEncoder.encode(body.password()));
+        newUser.setRole(UserRole.USER);
 
         this.userRepository.save(newUser);
 
