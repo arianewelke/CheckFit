@@ -15,6 +15,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleBusinessException(BusinessExceptions ex) {
         Map<String, String> error = new HashMap<>();
         error.put("message", ex.getMessage());
+        error.put("error", ex.getMessage());
         if (ex.getCode() != null) {
             error.put("code", ex.getCode());
         }
