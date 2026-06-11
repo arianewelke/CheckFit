@@ -96,14 +96,14 @@ function AdminActivities() {
                             <input
                                 className="form-input"
                                 type="text"
-                                placeholder="Ex: Muscula??o, Yoga, Spinning..."
+                                placeholder="Ex: Musculação, Yoga, Spinning..."
                                 value={form.description}
                                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                                 required
                             />
                         </div>
                         <div className="form-group">
-                            <label className="form-label">Data/hora de in?cio</label>
+                            <label className="form-label">Data/hora de início</label>
                             <input
                                 className="form-input"
                                 type="datetime-local"
