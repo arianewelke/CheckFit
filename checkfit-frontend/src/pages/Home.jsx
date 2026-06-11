@@ -5,6 +5,7 @@ import ToastNotification from "../components/ToastNotification";
 import api from "../services/api";
 import { formatTimeRange } from "../utils/dateFormat.js";
 import { calculateConsecutiveDays, calculateWeeklyCheckins } from "../utils/checkinStats.js";
+import { getCheckinErrorMessage } from "../utils/checkinErrors.js";
 
 function Home() {
     const navigate = useNavigate();
@@ -70,7 +71,7 @@ function Home() {
             
         } catch (error) {
             console.error("Check-in error:", error);
-            setToast({ message: error.response?.data?.message || "Erro ao realizar check-in. Tente novamente.", type: "error" });
+            setToast({ message: getCheckinErrorMessage(error), type: "error" });
         } finally {
             setIsCheckingIn(false);
             setCheckingInActivity(null);

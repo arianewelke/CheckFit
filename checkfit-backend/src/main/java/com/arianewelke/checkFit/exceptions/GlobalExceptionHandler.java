@@ -14,7 +14,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessExceptions.class)
     public ResponseEntity<Map<String, String>> handleBusinessException(BusinessExceptions ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("error", ex.getMessage());
+        error.put("message", ex.getMessage());
+        if (ex.getCode() != null) {
+            error.put("code", ex.getCode());
+        }
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }

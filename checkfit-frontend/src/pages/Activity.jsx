@@ -4,6 +4,7 @@ import api from "../services/api";
 import Navbar from "../components/Layout/Navbar";
 import ToastNotification from "../components/ToastNotification";
 import { formatTimeRange } from "../utils/dateFormat";
+import { getCheckinErrorMessage } from "../utils/checkinErrors";
 
 function Activity() {
     const [activities, setActivities] = useState([]);
@@ -69,7 +70,7 @@ function Activity() {
             
         } catch (error) {
             console.error("Check-in error:", error);
-            setToast({ message: error.response?.data?.message || "Erro ao realizar check-in. Tente novamente.", type: "error" });
+            setToast({ message: getCheckinErrorMessage(error), type: "error" });
         } finally {
             setCheckingInActivity(null);
         }

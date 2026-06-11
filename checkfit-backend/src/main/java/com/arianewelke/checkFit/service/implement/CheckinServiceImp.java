@@ -45,16 +45,25 @@ public class CheckinServiceImp implements CheckinService {
         var now = LocalDateTime.now();
 
         if (activity.getFinishTime().isBefore(now)) {
-            throw new BusinessExceptions("Unable to check in to an activity that has already finished");
+            throw new BusinessExceptions(
+                    "ACTIVITY_FINISHED",
+                    "Esta atividade já foi encerrada. Não é mais possível fazer check-in."
+            );
+        }
+
+        if (checkinRepository.existsByUserAndActivity(user, activity)) {
+            throw new BusinessExceptions(
+                    "ALREADY_CHECKED_IN",
+                    "Você já está inscrito nesta atividade. Consulte seu histórico de check-ins."
+            );
         }
 
         long checkinCount = checkinRepository.countByActivityId(activity.getId());
         if (checkinCount >= activity.getLimitPeople()) {
-            throw new BusinessExceptions("Check-in unavailable. This activity is full");
-        }
-
-        if (checkinRepository.existsByUserAndActivity(user, activity)) {
-            throw new BusinessExceptions("User has already checked in this activity");
+            throw new BusinessExceptions(
+                    "ACTIVITY_FULL",
+                    "Esta atividade atingiu o limite de vagas. Não há mais lugares disponíveis."
+            );
         }
 
         LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
@@ -62,7 +71,10 @@ public class CheckinServiceImp implements CheckinService {
 
         boolean alreadyCheckedToday = checkinRepository.existsByUserAndCheckinTimeBetween(user, startOfDay, endOfDay);
         if (alreadyCheckedToday) {
-            throw new BusinessExceptions("User has already checked today");
+            throw new BusinessExceptions(
+                    "ALREADY_CHECKED_TODAY",
+                    "Você já realizou um check-in hoje. Volte amanhã para participar de outra atividade!"
+            );
         }
 
         var checkin = new Checkin(user, activity);
