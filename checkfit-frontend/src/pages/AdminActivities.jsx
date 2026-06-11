@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Layout/Navbar.jsx";
+import { formatTimeRange } from "../utils/dateFormat";
 
 function AdminActivities() {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ function AdminActivities() {
             return;
         }
         fetchActivities();
-    }, []);
+    }, [navigate, role]);
 
     const fetchActivities = async () => {
         try {
@@ -48,10 +49,9 @@ function AdminActivities() {
             const token = localStorage.getItem("token");
             await api.post("/activity", {
                 description: form.description,
-                // Envie direto o valor do form, sem o replace
                 startTime: form.startTime,
                 finishTime: form.finishTime,
-                limitPeople: parseInt(form.limitPeople)
+                limitPeople: parseInt(form.limitPeople, 10)
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -67,7 +67,7 @@ function AdminActivities() {
     };
 
     const handleDelete = async (id) => {
-        if (!confirm("Deseja deletar esta atividade?")) return;
+        if (!window.confirm("Deseja deletar esta atividade?")) return;
         try {
             const token = localStorage.getItem("token");
             await api.delete(`/activity/${id}`, {
@@ -88,23 +88,22 @@ function AdminActivities() {
                 {error && <div className="alert alert-error">{error}</div>}
                 {success && <div className="alert alert-success">{success}</div>}
 
-                {/* Formulário */}
                 <div className="card" style={{ marginBottom: "2rem", padding: "1.5rem" }}>
                     <h2>Nova Atividade</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
-                            <label className="form-label">Descrição</label>
+                            <label className="form-label">Descri??o</label>
                             <input
                                 className="form-input"
                                 type="text"
-                                placeholder="Ex: Musculação, Yoga, Spinning..."
+                                placeholder="Ex: Muscula??o, Yoga, Spinning..."
                                 value={form.description}
                                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                                 required
                             />
                         </div>
                         <div className="form-group">
-                            <label className="form-label">Data/hora de início</label>
+                            <label className="form-label">Data/hora de in?cio</label>
                             <input
                                 className="form-input"
                                 type="datetime-local"
@@ -145,7 +144,6 @@ function AdminActivities() {
                     </form>
                 </div>
 
-                {/* Lista de atividades */}
                 <h2>Atividades Cadastradas</h2>
                 {activities.length === 0 ? (
                     <p>Nenhuma atividade cadastrada.</p>
@@ -156,14 +154,14 @@ function AdminActivities() {
                                 <div>
                                     <strong>{activity.description}</strong>
                                     <p style={{ margin: 0, color: "var(--text-secondary)", fontSize: "0.875rem" }}>
-                                        {activity.startTime} ? {activity.finishTime} | Limite: {activity.limitPeople}
+                                        {formatTimeRange(activity.startTime, activity.finishTime)} | Limite: {activity.limitPeople}
                                     </p>
                                 </div>
                                 <button
                                     className="btn btn-secondary btn-sm"
                                     onClick={() => handleDelete(activity.id)}
                                 >
-                                    ?? Deletar
+                                    Deletar
                                 </button>
                             </div>
                         ))}

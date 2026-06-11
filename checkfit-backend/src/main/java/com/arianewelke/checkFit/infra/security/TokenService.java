@@ -1,6 +1,7 @@
 package com.arianewelke.checkFit.infra.security;
 
 import com.arianewelke.checkFit.entity.User;
+import com.arianewelke.checkFit.entity.UserRole;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -27,7 +28,7 @@ public class TokenService  {
             String token = JWT.create()
                     .withIssuer("login-auth-api")
                     .withSubject(user.getEmail())
-                    .withClaim("role", user.getRole().toString())
+                    .withClaim("role", user.getRole() == UserRole.ADMIN ? UserRole.ADMIN.name() : UserRole.USER.name())
                     .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm);
             return token;

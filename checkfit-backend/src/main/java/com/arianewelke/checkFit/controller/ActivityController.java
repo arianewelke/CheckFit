@@ -19,7 +19,6 @@ public class ActivityController {
 
     private final ActivityService activityService;
     private final ActivityRepository activityRepository;
-    private java.time.LocalDateTime LocalDateTime;
 
     public ActivityController(ActivityService activityService, ActivityRepository activityRepository) {
         this.activityService = activityService;
@@ -102,7 +101,7 @@ public class ActivityController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Activity> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         activityService.delete(id);
         return ResponseEntity.noContent().build();
     }

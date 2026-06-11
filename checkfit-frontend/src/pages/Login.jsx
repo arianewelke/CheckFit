@@ -1,7 +1,7 @@
 import { useState } from "react";
 import api from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+import { persistAuth } from "../utils/auth";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -23,14 +23,10 @@ function Login() {
 
         try {
             const response = await api.post("/auth/login", { email, password });
-            const token = response.data;
+            persistAuth(response.data);
 
-            // Decodifica o token e salva o role
-            const decoded = jwtDecode(token);
-            localStorage.setItem("token", token);
-            localStorage.setItem("role", decoded.role);
-
-            navigate("/home");
+            const role = localStorage.getItem("role");
+            navigate(role === "ADMIN" ? "/admin/activities" : "/home");
         } catch (error) {
             setError(error.response?.data?.message || "Erro ao fazer login.");
         } finally {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
+import { persistAuth } from "../utils/auth";
 
 function Register() {
     const [formData, setFormData] = useState({
@@ -72,8 +73,7 @@ function Register() {
                 password: formData.password
             });
             
-            // Auto-login após registro bem-sucedido
-            localStorage.setItem("token", response.data);
+            persistAuth(response.data);
             navigate("/home");
         } catch (error) {
             console.error("Registration error:", error);
