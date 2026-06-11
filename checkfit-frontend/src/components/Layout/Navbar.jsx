@@ -7,9 +7,11 @@ function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     
     const isAuthenticated = localStorage.getItem("token");
+    const isAdmin = localStorage.getItem("role") === "ADMIN";
     
     const handleLogout = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("role");
         navigate("/");
     };
     
@@ -20,8 +22,9 @@ function Navbar() {
     const menuItems = [
         { path: "/home", label: "Início", icon: "🏠" },
         { path: "/activity", label: "Atividades", icon: "🏃‍♂️" },
-       // { path: "/checkin", label: "Check-in", icon: "✅" },
-        { path: "/checkin/history", label: "Histórico", icon: "📋" }
+        { path: "/checkin/history", label: "Histórico", icon: "📋" },
+        // Só aparece para ADMIN
+        ...(isAdmin ? [{ path: "/admin/activities", label: "Gerenciar", icon: "⚙️" }] : [])
     ];
     
     return (

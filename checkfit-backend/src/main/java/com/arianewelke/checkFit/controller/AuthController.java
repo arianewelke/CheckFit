@@ -11,6 +11,7 @@ import com.arianewelke.checkFit.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -90,6 +91,35 @@ public class AuthController {
         String token = tokenService.generateToken(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(token);
 
+    }
+
+    @PostMapping("/register-admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> registerAdmin(@RequestBody @Valid RegisterRequestDTO body) {
+        if (userRepository.existsByEmail(body.email())) {
+            throw new BusinessExceptions("Email already registered");
+        }
+        if (userRepository.existsByCpf(body.cpf())) {
+            throw new BusinessExceptions("CPF already registered");
+        }
+        if (userRepository.existsByPhone(body.phone())) {
+            throw new BusinessExceptions("Phone already registered");
+        }
+
+        var newAdmin = new User();
+        newAdmin.setName(body.name());
+        newAdmin.setEmail(body.email());
+        newAdmin.setPhone(body.phone());
+        newAdmin.setCpf(body.cpf());
+        newAdmin.setDateBirth(body.dateBirth());
+        newAdmin.setCreatedAt(LocalDateTime.now());
+        newAdmin.setPassword(passwordEncoder.encode(body.password()));
+        newAdmin.setRole(UserRole.ADMIN);
+
+        userRepository.save(newAdmin);
+
+        String token = tokenService.generateToken(newAdmin);
+        return ResponseEntity.status(HttpStatus.CREATED).body(token);
     }
 }
 

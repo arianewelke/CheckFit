@@ -54,7 +54,6 @@ function Activity() {
     };
 
     const handleDirectCheckin = async (activityId) => {
-        setIsCheckingIn(true);
         setCheckingInActivity(activityId);
         
         try {
@@ -72,7 +71,6 @@ function Activity() {
             console.error("Check-in error:", error);
             setToast({ message: error.response?.data?.message || "Erro ao realizar check-in. Tente novamente.", type: "error" });
         } finally {
-            setIsCheckingIn(false);
             setCheckingInActivity(null);
         }
     };

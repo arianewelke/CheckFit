@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Activity from "./pages/Activity.jsx";
 import CheckinHistory from "./pages/CheckinHistory.jsx";
 import Home from "./pages/Home";
+import AdminActivities from "./pages/AdminActivities.jsx";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/activity" element={<Activity />} />
                 <Route path="/checkin/history" element={<CheckinHistory />} />
                 <Route path="/historico" element={<CheckinHistory />} />
+                <Route path="/admin/activities" element={<AdminActivities />} />
                 
                 {/* Redirecionar rotas não encontradas para a landing page */}
                 <Route path="*" element={<Navigate to="/" replace />} />

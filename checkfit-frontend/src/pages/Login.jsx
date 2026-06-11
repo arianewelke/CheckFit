@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -19,14 +20,19 @@ function Login() {
             setIsLoading(false);
             return;
         }
-        
+
         try {
             const response = await api.post("/auth/login", { email, password });
-            localStorage.setItem("token", response.data);
+            const token = response.data;
+
+            // Decodifica o token e salva o role
+            const decoded = jwtDecode(token);
+            localStorage.setItem("token", token);
+            localStorage.setItem("role", decoded.role);
+
             navigate("/home");
         } catch (error) {
-            console.error("Login error:", error);
-            setError(error.response?.data?.message || "Erro ao fazer login. Verifique suas credenciais.");
+            setError(error.response?.data?.message || "Erro ao fazer login.");
         } finally {
             setIsLoading(false);
         }
