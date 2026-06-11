@@ -92,7 +92,7 @@ function AdminActivities() {
                     <h2>Nova Atividade</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
-                            <label className="form-label">Descri??o</label>
+                            <label className="form-label">Descrição</label>
                             <input
                                 className="form-input"
                                 type="text"
