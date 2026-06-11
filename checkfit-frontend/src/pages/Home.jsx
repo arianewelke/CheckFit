@@ -3,14 +3,16 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/Layout/Navbar";
 import ToastNotification from "../components/ToastNotification";
 import api from "../services/api";
-import {formatTimeRange} from "../utils/dateFormat.js";
+import { formatTimeRange } from "../utils/dateFormat.js";
+import { calculateConsecutiveDays, calculateWeeklyCheckins } from "../utils/checkinStats.js";
 
 function Home() {
     const navigate = useNavigate();
     const [stats, setStats] = useState({
         totalCheckins: 0,
         weeklyCheckins: 0,
-        activeActivities: 0
+        activeActivities: 0,
+        consecutiveDays: 0
     });
     const [recentActivities, setRecentActivities] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -28,15 +30,21 @@ function Home() {
             const token = localStorage.getItem("token");
             const headers = { Authorization: `Bearer ${token}` };
 
-            // Buscar atividades disponíveis
-            const activitiesResponse = await api.get("/activity", { headers });
+            const [activitiesResponse, historyResponse] = await Promise.all([
+                api.get("/activity", { headers }),
+                api.get("/checkin/history", { headers })
+            ]);
+
             const activities = activitiesResponse.data;
-            
-            setStats(prev => ({
-                ...prev,
-                activeActivities: activities.length
-            }));
-            
+            const history = historyResponse.data || [];
+
+            setStats({
+                totalCheckins: history.length,
+                weeklyCheckins: calculateWeeklyCheckins(history),
+                activeActivities: activities.length,
+                consecutiveDays: calculateConsecutiveDays(history)
+            });
+
             setRecentActivities(activities.slice(0, 3));
         } catch (error) {
             console.error("Error fetching dashboard data:", error);
@@ -107,15 +115,17 @@ function Home() {
                             <h1>Bem-vindo de volta, {userName || "Usuário"}! 💪</h1>
                             <p>Pronto para mais um dia de treino? Vamos continuar sua jornada fitness!</p>
                         </div>
-                        <div className="welcome-visual">
-                            <div className="streak-card">
-                                <div className="streak-icon">🔥</div>
-                                <div className="streak-info">
-                                    <div className="streak-number">7</div>
-                                    <div className="streak-label">Dias consecutivos</div>
+                        {stats.consecutiveDays > 0 && (
+                            <div className="welcome-visual">
+                                <div className="streak-card">
+                                    <div className="streak-icon">🔥</div>
+                                    <div className="streak-info">
+                                        <div className="streak-number">{stats.consecutiveDays}</div>
+                                        <div className="streak-label">Dias consecutivos</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
                     </section>
 
                     {/* Stats Cards */}
