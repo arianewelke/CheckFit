@@ -2,7 +2,6 @@ package com.arianewelke.checkFit.controller;
 
 import com.arianewelke.checkFit.dto.LoginRequestDTO;
 import com.arianewelke.checkFit.dto.RegisterRequestDTO;
-import com.arianewelke.checkFit.dto.ResponseDTO;
 import com.arianewelke.checkFit.entity.User;
 import com.arianewelke.checkFit.entity.UserRole;
 import com.arianewelke.checkFit.exceptions.BusinessExceptions;
@@ -14,15 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
-
 public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -37,10 +32,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO body) {
         var user = userRepository.findByEmail(body.email())
-                .orElseThrow(() -> new BusinessExceptions("User not found"));
+                .orElseThrow(() -> new BusinessExceptions(
+                        "USER_NOT_FOUND",
+                        "Usuário não encontrado. Verifique seu e-mail."
+                ));
 
         if (!passwordEncoder.matches(body.password(), user.getPassword())) {
-            throw new BusinessExceptions("Invalid password");
+            throw new BusinessExceptions(
+                    "INVALID_PASSWORD",
+                    "Senha incorreta. Tente novamente."
+            );
         }
 
         String token = tokenService.generateToken(user);
@@ -49,30 +50,31 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequestDTO body) {
-
-        if (userRepository.existsByEmail(body.email())) {
-            throw new BusinessExceptions("Email already registered");
-        }
-
-        if (userRepository.existsByCpf(body.cpf())) {
-            throw new BusinessExceptions("CPF already registered");
-        }
-
-        if(userRepository.existsByPhone(body.phone())) {
-            throw new BusinessExceptions("Phone already registered");
-        }
+        validateUniqueUserData(body);
 
         if (!body.phone().matches("^\\d{10,11}$")) {
-            throw new BusinessExceptions("Phone number must contain 10 or 11 digits");
+            throw new BusinessExceptions(
+                    "INVALID_PHONE",
+                    "O telefone deve conter 10 ou 11 dígitos."
+            );
         }
         if (!body.cpf().matches("^\\d{11}$")) {
-            throw new BusinessExceptions("CPF must contain exactly 11 digits");
+            throw new BusinessExceptions(
+                    "INVALID_CPF",
+                    "O CPF deve conter exatamente 11 dígitos."
+            );
         }
         if (!body.password().matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")) {
-            throw new BusinessExceptions("Password must have at least 8 characters, including letters and numbers");
+            throw new BusinessExceptions(
+                    "INVALID_PASSWORD_FORMAT",
+                    "A senha deve ter pelo menos 8 caracteres, incluindo letras e números."
+            );
         }
         if (!body.email().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
-            throw new BusinessExceptions("Invalid email format");
+            throw new BusinessExceptions(
+                    "INVALID_EMAIL",
+                    "Formato de e-mail inválido."
+            );
         }
 
         var newUser = new User();
@@ -87,24 +89,14 @@ public class AuthController {
 
         this.userRepository.save(newUser);
 
-        // Gerar token JWT após registro bem-sucedido para permitir auto-login
         String token = tokenService.generateToken(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(token);
-
     }
 
     @PostMapping("/register-admin")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> registerAdmin(@RequestBody @Valid RegisterRequestDTO body) {
-        if (userRepository.existsByEmail(body.email())) {
-            throw new BusinessExceptions("Email already registered");
-        }
-        if (userRepository.existsByCpf(body.cpf())) {
-            throw new BusinessExceptions("CPF already registered");
-        }
-        if (userRepository.existsByPhone(body.phone())) {
-            throw new BusinessExceptions("Phone already registered");
-        }
+        validateUniqueUserData(body);
 
         var newAdmin = new User();
         newAdmin.setName(body.name());
@@ -121,5 +113,27 @@ public class AuthController {
         String token = tokenService.generateToken(newAdmin);
         return ResponseEntity.status(HttpStatus.CREATED).body(token);
     }
-}
 
+    private void validateUniqueUserData(RegisterRequestDTO body) {
+        if (userRepository.existsByEmail(body.email())) {
+            throw new BusinessExceptions(
+                    "EMAIL_ALREADY_REGISTERED",
+                    "Este e-mail já está cadastrado."
+            );
+        }
+
+        if (userRepository.existsByCpf(body.cpf())) {
+            throw new BusinessExceptions(
+                    "CPF_ALREADY_REGISTERED",
+                    "Este CPF já está cadastrado."
+            );
+        }
+
+        if (userRepository.existsByPhone(body.phone())) {
+            throw new BusinessExceptions(
+                    "PHONE_ALREADY_REGISTERED",
+                    "Este telefone já está cadastrado."
+            );
+        }
+    }
+}

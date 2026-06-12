@@ -2,6 +2,7 @@ import { useState } from "react";
 import api from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
 import { persistAuth } from "../utils/auth";
+import { getApiErrorMessage } from "../utils/apiErrors";
 
 function Register() {
     const [formData, setFormData] = useState({
@@ -77,7 +78,7 @@ function Register() {
             navigate("/home");
         } catch (error) {
             console.error("Registration error:", error);
-            setError(error.response?.data?.message || "Erro ao criar conta. Tente novamente.");
+            setError(getApiErrorMessage(error, "Erro ao criar conta. Tente novamente."));
         } finally {
             setIsLoading(false);
         }

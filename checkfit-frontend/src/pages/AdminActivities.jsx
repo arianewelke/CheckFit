@@ -3,6 +3,7 @@ import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Layout/Navbar.jsx";
 import { formatTimeRange } from "../utils/dateFormat";
+import { getApiErrorMessage } from "../utils/apiErrors";
 
 function AdminActivities() {
     const navigate = useNavigate();
@@ -60,7 +61,7 @@ function AdminActivities() {
             setForm({ description: "", startTime: "", finishTime: "", limitPeople: "" });
             fetchActivities();
         } catch (err) {
-            setError(err.response?.data?.message || "Erro ao criar atividade.");
+            setError(getApiErrorMessage(err, "Erro ao criar atividade. Tente novamente."));
         } finally {
             setIsLoading(false);
         }

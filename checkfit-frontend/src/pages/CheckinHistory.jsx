@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../components/Layout/Navbar";
 import { formatTimeRange, formatDateTime } from "../utils/dateFormat";
+import { getApiErrorMessage } from "../utils/apiErrors";
 
 function CheckinHistory() {
     const [history, setHistory] = useState([]);
@@ -29,7 +30,7 @@ function CheckinHistory() {
                 setHistory(response.data || []);
             } catch (error) {
                 console.error("Error fetching history:", error);
-                setError(error.response?.data?.message || "Erro ao carregar histórico");
+                setError(getApiErrorMessage(error, "Erro ao carregar histórico. Tente novamente."));
                 
                 if (error.response?.status === 401) {
                     navigate("/auth/login");
@@ -140,7 +141,7 @@ function CheckinHistory() {
                                                 <div className="item-title">
                                                     <span className="activity-icon">🏃‍♂️</span>
                                                     <span className="activity-id">
-                                                        Atividade {item.activityId || item.idActivity || ""}
+                                                        {item.description || item.activityName || `Atividade ${item.activityId || item.idActivity || item.name || ""}`}
                                                     </span>
                                                 </div>
                                                 {getStatusBadge(item.status)}

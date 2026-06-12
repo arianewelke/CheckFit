@@ -39,7 +39,7 @@ public class UserServiceImp implements UserService {
     @Override
     public User update(Long id, User user) {
         User userToUpdate = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
             userToUpdate.setName(user.getName());
             userToUpdate.setPhone(user.getPhone());
             userToUpdate.setCpf(user.getCpf());

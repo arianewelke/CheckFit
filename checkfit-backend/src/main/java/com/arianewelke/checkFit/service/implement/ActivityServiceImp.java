@@ -38,7 +38,7 @@ public class ActivityServiceImp implements ActivityService {
     @Override
     public Activity update(Long id, Activity activity) {
         Activity oldActivity = activityRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Activity not found with id: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Atividade não encontrada."));
         oldActivity.setDescription(activity.getDescription());
         oldActivity.setStartTime(activity.getStartTime());
         oldActivity.setFinishTime(activity.getFinishTime());

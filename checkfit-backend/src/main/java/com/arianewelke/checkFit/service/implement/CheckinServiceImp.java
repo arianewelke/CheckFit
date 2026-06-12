@@ -37,7 +37,7 @@ public class CheckinServiceImp implements CheckinService {
         var userOptional = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (activityOptional.isEmpty() || userOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User or activity not found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário ou atividade não encontrados.");
         }
 
         var activity = activityOptional.get();
@@ -106,7 +106,7 @@ public class CheckinServiceImp implements CheckinService {
     @Override
     public Checkin update(Long id, Checkin checkin) {
        Checkin existingCheckin = checkinRepository.findById(id)
-                       .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Checkin Not Found with ID: " + id));
+                       .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Check-in não encontrado."));
             existingCheckin.setCheckinTime(checkin.getCheckinTime());
             return checkinRepository.save(existingCheckin);
     }
@@ -120,7 +120,7 @@ public class CheckinServiceImp implements CheckinService {
         var userOptional = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (userOptional.isEmpty()) {
-            throw new BusinessExceptions("User not found");
+            throw new BusinessExceptions("USER_NOT_FOUND", "Usuário não encontrado.");
         }
 
         var user = userOptional.get();

@@ -8,26 +8,26 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record RegisterRequestDTO (
-        @NotBlank(message = "Name is required")
+        @NotBlank(message = "O nome é obrigatório")
         String name,
 
-        @NotBlank (message = "Email is required")
-        @Email(message = "Invalid email format")
+        @NotBlank(message = "O e-mail é obrigatório")
+        @Email(message = "Formato de e-mail inválido")
         String email,
 
-        @NotBlank(message = "Phone is required")
-        @Pattern(regexp="\\d{11}", message = "Phone number must have exactly 11 numeric digits")
+        @NotBlank(message = "O telefone é obrigatório")
+        @Pattern(regexp="\\d{11}", message = "O telefone deve conter exatamente 11 dígitos")
         String phone,
 
-        @NotBlank(message = "CPF is required")
-        @Pattern(regexp = "\\d{11}", message = "CPF must have exactly 11 numeric digits")
+        @NotBlank(message = "O CPF é obrigatório")
+        @Pattern(regexp = "\\d{11}", message = "O CPF deve conter exatamente 11 dígitos")
         String cpf,
 
         LocalDate dateBirth,
 
-        @NotBlank(message = "Password is required")
-        @Size(min = 8, message = "Password must be at least 8 characters")
+        @NotBlank(message = "A senha é obrigatória")
+        @Size(min = 8, message = "A senha deve ter pelo menos 8 caracteres")
         @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
-                message = "Password must contain letters and numbers")
+                message = "A senha deve conter letras e números")
         String password) {
 }

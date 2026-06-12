@@ -2,6 +2,7 @@ import { useState } from "react";
 import api from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
 import { persistAuth } from "../utils/auth";
+import { getApiErrorMessage } from "../utils/apiErrors";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -28,7 +29,7 @@ function Login() {
             const role = localStorage.getItem("role");
             navigate(role === "ADMIN" ? "/admin/activities" : "/home");
         } catch (error) {
-            setError(error.response?.data?.message || "Erro ao fazer login.");
+            setError(getApiErrorMessage(error, "Erro ao fazer login. Tente novamente."));
         } finally {
             setIsLoading(false);
         }

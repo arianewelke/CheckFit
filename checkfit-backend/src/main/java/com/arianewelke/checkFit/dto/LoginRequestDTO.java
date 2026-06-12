@@ -7,13 +7,13 @@ import jakarta.validation.constraints.Size;
 
 
 public record LoginRequestDTO (
-        @NotBlank(message = "Email is required")
-        @Email(message = "Invalid email format")
+        @NotBlank(message = "O e-mail é obrigatório")
+        @Email(message = "Formato de e-mail inválido")
         String email,
 
-        @NotBlank(message = "Password is required")
-        @Size(min = 8, message = "Password must be at least 8 characters long")
+        @NotBlank(message = "A senha é obrigatória")
+        @Size(min = 8, message = "A senha deve ter pelo menos 8 caracteres")
         @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
-                message = "Password must contain letters and numbers")
+                message = "A senha deve conter letras e números")
         String password) {
 }
