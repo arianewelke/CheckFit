@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { clearAuth } from "../../utils/auth";
 
 function Navbar() {
     const navigate = useNavigate();
@@ -10,8 +11,7 @@ function Navbar() {
     const isAdmin = localStorage.getItem("role") === "ADMIN";
     
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("role");
+        clearAuth();
         navigate("/");
     };
     

@@ -6,6 +6,7 @@ import api from "../services/api";
 import { formatTimeRange } from "../utils/dateFormat.js";
 import { calculateConsecutiveDays, calculateWeeklyCheckins } from "../utils/checkinStats.js";
 import { getCheckinErrorMessage } from "../utils/checkinErrors.js";
+import { getStoredUserName } from "../utils/auth.js";
 
 function Home() {
     const navigate = useNavigate();
@@ -23,6 +24,7 @@ function Home() {
     const [toast, setToast] = useState({ message: "", type: "" });
 
     useEffect(() => {
+        setUserName(getStoredUserName());
         fetchDashboardData();
     }, []);
 

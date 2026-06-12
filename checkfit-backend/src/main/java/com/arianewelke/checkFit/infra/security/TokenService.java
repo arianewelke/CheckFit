@@ -28,6 +28,7 @@ public class TokenService  {
             String token = JWT.create()
                     .withIssuer("login-auth-api")
                     .withSubject(user.getEmail())
+                    .withClaim("name", user.getName())
                     .withClaim("role", user.getRole() == UserRole.ADMIN ? UserRole.ADMIN.name() : UserRole.USER.name())
                     .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm);
